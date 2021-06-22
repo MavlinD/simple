@@ -1,0 +1,13 @@
+# https://webdevblog.ru/kak-ispolzovat-django-postgresql-i-docker/
+version: "3.9"
+
+services:
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - 9000:8080
+    restart: unless-stopped
+    networks:
+      - default
