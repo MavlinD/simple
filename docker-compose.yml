@@ -5,23 +5,35 @@ services:
   nginx:
     build: ./nginx
     container_name: nginx
-#    expose:
-#      - 8080
+#    command: bash run.sh"
+#      - /bin/bash -c "./nginx/run.sh"
+
+    environment:
+      - DB=5555
+    env_file: .env
+    #    command:
+#      - /bin/bash
+#      - -c echo ${DJANGO_SECRET_KEY}
+#      - |
     ports:
-      - 9000:8080
+      - $PORT:8080
+#      - 9000:8080
     restart: unless-stopped
+#    tty: true
+    volumes:
+      - bashhistory:/commandhistory
+      - ./test.txt:/test.txt
+
 
   bash:
     build: ./bash
-#    profiles:
-#      - "off"
+    profiles: ["off"]
     container_name: bash
     restart: unless-stopped
 
   mongodb:
     image: mongo
-#    profiles:
-#      - "off"
+    profiles: ["off"]
     container_name: mongodb
     env_file: ./db/.env
     volumes:
@@ -29,7 +41,7 @@ services:
     ports:
       - 4040:27017
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo 0.0.0.0:27017/test --quiet
+      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
       interval: 30s
       timeout: 10s
       retries: 3
@@ -37,3 +49,28 @@ services:
 
 networks:
   mbank:
+
+volumes:
+  bashhistory:
+
+  test2:
+    driver: local
+#    source:
+#  test: ./test.txt:/home/test.txt
+    driver_opts:
+      type: none
+      device: $PWD/test.txt
+#      device: $PWD/node-config.js
+      o: bind
+#      type: bind
+#      source: /test.txt
+#      target: /test.txt
+#    driver_opts:
+#      type: bind
+#      type: local
+#      source: test.txt
+#      device: .test.txt
+#      device: $PWD/test.txt
+#      target: /test.txt
+#      o: bind
+
