@@ -2,28 +2,50 @@ version: "3.9"
 
 services:
 
-  nginx:
-    build: ./nginx
-    container_name: nginx
-#    command: bash run.sh"
-#      - /bin/bash -c "./nginx/run.sh"
+  web:
+    extends:
+      service: nginx
+      file: nginx/docker-compose.yml
 
-    environment:
-      - DB=5555
-    env_file: .env
-    #    command:
-#      - /bin/bash
-#      - -c echo ${DJANGO_SECRET_KEY}
-#      - |
-    ports:
-      - $PORT:8080
+#    networks:
+#      - host
+#    networks:
+#      - $NET_NAME
+
+    network_mode: host
+#    dns_opt:
+#      -
+    dns:
+      - localhost
+      - 8.8.8.8
+      - 4.4.4.4
+      - 192.168.9.45
+#    extra_hosts:
+#      - 'hostname.local:192.168.0.10'
+  #    network_mode: bridge
+
+#    ports:
 #      - 9000:8080
-    restart: unless-stopped
-#    tty: true
-    volumes:
-      - bashhistory:/commandhistory
-      - ./test.txt:/test.txt
 
+#    build: ./nginx
+#    container_name: nginx
+##    command: bash run.sh"
+##      - /bin/bash -c "./nginx/run.sh"
+#
+#    environment:
+#      - DB=5555
+#    env_file: .env
+#    ports:
+#      - $PORT:8080
+#    restart: unless-stopped
+##    tty: true
+#    volumes:
+#      - type: bind
+#        source: $PWD/nginx/test
+#        target: /test
+
+  #      - bashhistory:/commandhistory
+#      - ./test.txt:/test.txt
 
   bash:
     build: ./bash
@@ -47,30 +69,14 @@ services:
       retries: 3
     restart: unless-stopped
 
-networks:
-  mbank:
+#networks:
+#  simple:
+#    name: $NET_NAME
+
+#networks:
+#  host:
+#    external: true
+#    name: host
 
 volumes:
   bashhistory:
-
-  test2:
-    driver: local
-#    source:
-#  test: ./test.txt:/home/test.txt
-    driver_opts:
-      type: none
-      device: $PWD/test.txt
-#      device: $PWD/node-config.js
-      o: bind
-#      type: bind
-#      source: /test.txt
-#      target: /test.txt
-#    driver_opts:
-#      type: bind
-#      type: local
-#      source: test.txt
-#      device: .test.txt
-#      device: $PWD/test.txt
-#      target: /test.txt
-#      o: bind
-

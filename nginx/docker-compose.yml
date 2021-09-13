@@ -6,19 +6,32 @@ services:
     build:
       context: ../
       dockerfile: ./nginx/Dockerfile
+#      network: host
     env_file: .env
-    environment:
-      - DOCKER_BUILDKIT=1
-    ports:
-      - $PORT:8080
-#      - 9000:8080
+    container_name: web
+    hostname: web
+#    networks:
+#      - host
+#    network_mode: bridge
+#    extra_hosts:
+#      - web2:172.21.0.3
+#    hosts:
+#      - web2:172.21.0.3
+#    network_mode: host
+#    https://habr:com/ru/company/ruvds/blog/450312/:
+#    ports:
+#      - 8080:8080
+#      - $PORT:8080
     restart: unless-stopped
 #    tty: true
     volumes:
       - bashhistory:/commandhistory
+      - type: bind
+        source: $PWD/nginx/test
+        target: /test
 
-networks:
-  mbank:
+#networks:
+#  $NET_NAME:
 
 volumes:
   bashhistory:

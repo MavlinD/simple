@@ -11,13 +11,16 @@ COPY ./nginx/app.conf /etc/nginx/conf.d/
 
 COPY ./nginx /usr/share/nginx/html
 
+RUN apt update && apt install iproute2 -y
+
 #USER test
-#RUN useradd --create-home appuser
-USER root
+#ARG USERNAME=appuser
+#RUN useradd --create-home $USERNAME
+#USER root
 
-ARG USERNAME=root
-
-COPY .bashrc /$USERNAME
+COPY .bashrc /root
+#COPY .bashrc /home/$USERNAME
+#USER $USERNAME
 #COPY run.sh .
 
 #RUN mkdir /myvol
